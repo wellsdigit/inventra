@@ -26,6 +26,24 @@ export const Colors = {
 
 export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
 
+/**
+ * Inventra brand colors used across the app.
+ */
+export const Brand = {
+  /** Primary brand green – splash screen, buttons, active indicators */
+  primary: '#346119',
+  /** Darker green variant – button fills, strong accents */
+  primaryDark: '#2B4F16',
+  /** Lighter green for subtle tints */
+  primaryLight: '#4A8A25',
+  /** White – text on brand backgrounds */
+  onPrimary: '#FFFFFF',
+  /** Muted text color for descriptions */
+  textMuted: '#6B7280',
+  /** Inactive dot / border color */
+  inactive: '#D1D5DB',
+} as const;
+
 export const Fonts = Platform.select({
   ios: {
     /** iOS `UIFontDescriptorSystemDesignDefault` */
