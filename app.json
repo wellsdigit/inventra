@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "stocksense-mobile",
-    "slug": "stocksense-mobile",
+    "name": "Eventra",
+    "slug": "eventra",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo-bg.png",
-    "scheme": "stocksensemobile",
+    "scheme": "eventra",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon",
-      "bundleIdentifier": "com.anonymous.stocksensemobile"
+      "bundleIdentifier": "com.anonymous.eventra"
     },
     "android": {
       "adaptiveIcon": {
@@ -19,11 +19,11 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.stocksensemobile"
+      "package": "com.anonymous.eventra"
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/logo-bg.png"
     },
     "plugins": [
       "expo-router",
@@ -34,19 +34,20 @@
           "image": "./assets/images/logo.png",
           "imageWidth": 100,
           "resizeMode": "contain"
-          // "android": {
-          //   "image": "./assets/images/logo.png",
-          //   "imageWidth": 76,
-          //   "size": "contain",
-          //   "resizeMode": "contain",
-          //   "backgroundColor": "#346119"
-          // }
         }
-      ]
+      ],
+      "@react-native-community/datetimepicker",
+      "expo-image"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "e57d7dab-0e78-4591-9744-557e75ac10d3"
+      }
     }
   }
 }

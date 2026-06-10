@@ -1,37 +1,56 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeInDown, ZoomIn } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { router } from "expo-router";
+import Svg, { Path } from "react-native-svg";
 
 import { Brand, Fonts } from "@/constants/theme";
 
-interface VerificationSuccessProps {
-  onContinue?: () => void;
+interface ForgotSuccessProps {
+  onLogin: () => void;
 }
 
-export default function VerificationSuccess({ onContinue }: VerificationSuccessProps) {
+// ---------------------------------------------------------------------------
+// Green checkmark icon
+// ---------------------------------------------------------------------------
+
+function GreenCheckmark() {
+  return (
+    <Svg width={48} height={48} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"
+        fill="#22C55E"
+      />
+    </Svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// ForgotSuccess component
+// ---------------------------------------------------------------------------
+
+export default function ForgotSuccess({ onLogin }: ForgotSuccessProps) {
   const insets = useSafeAreaInsets();
 
   return (
     <View
       style={[
-        styles.successContainer,
+        styles.container,
         { paddingTop: insets.top, paddingBottom: insets.bottom },
       ]}
     >
-      <View style={styles.successContent}>
-        {/* Circular checkmark badge */}
+      <View style={styles.content}>
+        {/* Green checkmark badge */}
         <Animated.View
           entering={ZoomIn.duration(400)}
           style={styles.checkmarkBadge}
         >
-          <Text style={styles.checkmarkIcon}>✓</Text>
+          <GreenCheckmark />
         </Animated.View>
 
         {/* Title */}
         <Animated.Text
           entering={FadeInDown.delay(200).duration(400)}
-          style={styles.successTitle}
+          style={styles.title}
         >
           Successful
         </Animated.Text>
@@ -39,25 +58,25 @@ export default function VerificationSuccess({ onContinue }: VerificationSuccessP
         {/* Subtitle */}
         <Animated.Text
           entering={FadeInDown.delay(300).duration(400)}
-          style={styles.successSubtitle}
+          style={styles.subtitle}
         >
-          Verification successful
+          You have successfully change your password
         </Animated.Text>
       </View>
 
-      {/* Continue button */}
+      {/* Log in button */}
       <Animated.View
         entering={FadeInDown.delay(400).duration(400)}
-        style={styles.continueButtonWrapper}
+        style={styles.buttonWrapper}
       >
         <Pressable
-          onPress={() => (onContinue ? onContinue() : router.replace("/(tabs)"))}
+          onPress={onLogin}
           style={({ pressed }) => [
-            styles.continueButton,
-            pressed && styles.continueButtonPressed,
+            styles.loginButton,
+            pressed && styles.loginButtonPressed,
           ]}
         >
-          <Text style={styles.continueButtonText}>Continue</Text>
+          <Text style={styles.loginText}>Log in</Text>
         </Pressable>
       </Animated.View>
     </View>
@@ -65,12 +84,12 @@ export default function VerificationSuccess({ onContinue }: VerificationSuccessP
 }
 
 const styles = StyleSheet.create({
-  successContainer: {
+  container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
     paddingHorizontal: 24,
   },
-  successContent: {
+  content: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
@@ -79,49 +98,39 @@ const styles = StyleSheet.create({
     width: 110,
     height: 110,
     borderRadius: 55,
-    backgroundColor: "#E6F4EA",
+    backgroundColor: "#DCFCE7",
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 2,
   },
-  checkmarkIcon: {
-    fontSize: 48,
-    color: "#346119",
-    fontWeight: "bold",
-  },
-  successTitle: {
+  title: {
     fontSize: 24,
     fontWeight: "700",
     fontFamily: Fonts?.sans,
-    color: "#346119",
+    color: "#22C55E",
     marginTop: 28,
   },
-  successSubtitle: {
+  subtitle: {
     fontSize: 16,
     fontFamily: Fonts?.sans,
     color: "#6B7280",
     marginTop: 8,
     textAlign: "center",
   },
-  continueButtonWrapper: {
+  buttonWrapper: {
     paddingBottom: 24,
   },
-  continueButton: {
+  loginButton: {
     backgroundColor: Brand.primaryDark,
     paddingVertical: 18,
-    borderRadius: 8,
+    borderRadius: 6,
     alignItems: "center",
     width: "100%",
   },
-  continueButtonPressed: {
+  loginButtonPressed: {
     backgroundColor: Brand.primary,
     transform: [{ scale: 0.98 }],
   },
-  continueButtonText: {
+  loginText: {
     fontSize: 16,
     fontWeight: "700",
     fontFamily: Fonts?.sans,
