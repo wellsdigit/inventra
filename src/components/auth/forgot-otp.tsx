@@ -16,35 +16,44 @@ import { Brand, Fonts } from "@/constants/theme";
 
 const OTP_LENGTH = 6;
 
-interface OtpVerificationProps {
+interface ForgotOtpProps {
+  /** Raw digits of the phone, e.g. "08012345678" */
   phone: string;
-  email: string;
-  onVerify: () => void;
+  onContinue: () => void;
   onBack: () => void;
 }
 
-export default function OtpVerification({
+/** Mask phone: keep first 4 and last 2 digits, replace rest with * */
+function maskPhone(phone: string): string {
+  if (phone.length <= 6) return phone;
+  const prefix = phone.slice(0, 4);
+  const suffix = phone.slice(-2);
+  const stars = "*".repeat(phone.length - 6);
+  return `+234 ${prefix}${stars}${suffix}`;
+}
+
+export default function ForgotOtp({
   phone,
-  email,
-  onVerify,
+  onContinue,
   onBack,
-}: OtpVerificationProps) {
+}: ForgotOtpProps) {
   const insets = useSafeAreaInsets();
   const [otp, setOtp] = useState("");
   const [isOtpFocused, setIsOtpFocused] = useState(false);
   const otpInputRef = useRef<TextInput>(null);
 
   const isOtpComplete = otp.length === OTP_LENGTH;
+  const masked = maskPhone(phone);
 
   const handleOtpChange = useCallback((text: string) => {
     const cleaned = text.replace(/[^0-9]/g, "").slice(0, OTP_LENGTH);
     setOtp(cleaned);
   }, []);
 
-  const handleVerify = useCallback(() => {
+  const handleContinue = useCallback(() => {
     if (!isOtpComplete) return;
-    onVerify();
-  }, [isOtpComplete, onVerify]);
+    onContinue();
+  }, [isOtpComplete, onContinue]);
 
   return (
     <KeyboardAvoidingView
@@ -70,11 +79,10 @@ export default function OtpVerification({
         {/* Subtitle */}
         <Animated.Text
           entering={FadeInDown.delay(200).duration(400)}
-          style={styles.otpSubtitle}
+          style={styles.subtitle}
         >
-          An OTP has been sent to your phone number{" "}
-          <Text style={styles.otpBold}>{phone}</Text> and email address{" "}
-          <Text style={styles.otpBold}>{email}</Text>
+          We have sent an OTP to{" "}
+          <Text style={styles.subtitleBold}>{masked}</Text>
         </Animated.Text>
 
         {/* OTP Boxes */}
@@ -94,6 +102,7 @@ export default function OtpVerification({
                   key={i}
                   style={[
                     styles.otpBox,
+                    isFilled && styles.otpBoxFilled,
                     isCurrent && styles.otpBoxFocused,
                   ]}
                 >
@@ -123,10 +132,10 @@ export default function OtpVerification({
 
         {/* Resend */}
         <Animated.View entering={FadeInDown.delay(400).duration(400)}>
-          <Text style={styles.otpResendRow}>
+          <Text style={styles.resendRow}>
             Didn't receive the code?{" "}
             <Text
-              style={styles.otpResendLink}
+              style={styles.resendLink}
               onPress={() => setOtp("")}
             >
               Resend code
@@ -137,19 +146,19 @@ export default function OtpVerification({
         {/* Spacer */}
         <View style={styles.spacer} />
 
-        {/* Verify button — only when all digits entered */}
+        {/* Continue button — only when all digits entered */}
         {isOtpComplete && (
           <Animated.View entering={FadeInDown.duration(300)}>
             <Pressable
-              onPress={handleVerify}
+              onPress={handleContinue}
               style={({ pressed }) => [
-                styles.verifyButton,
+                styles.continueButton,
                 pressed
-                  ? styles.verifyButtonPressed
-                  : styles.verifyButtonDefault,
+                  ? styles.continueButtonPressed
+                  : styles.continueButtonDefault,
               ]}
             >
-              <Text style={styles.verifyText}>Verify</Text>
+              <Text style={styles.continueText}>Continue</Text>
             </Pressable>
           </Animated.View>
         )}
@@ -172,17 +181,17 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontFamily: Fonts?.sans,
     color: "#1F2937",
-    marginBottom: 28,
+    marginBottom: 16,
     marginTop: 20,
   },
-  otpSubtitle: {
+  subtitle: {
     fontSize: 15,
     fontFamily: Fonts?.sans,
     color: "#374151",
     lineHeight: 22,
     marginBottom: 28,
   },
-  otpBold: {
+  subtitleBold: {
     fontWeight: "700",
     color: "#1F2937",
   },
@@ -199,11 +208,15 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#F3F4F6",
+  },
+  otpBoxFilled: {
     backgroundColor: "#FFFFFF",
   },
   otpBoxFocused: {
     borderColor: Brand.primary,
     borderWidth: 1.5,
+    backgroundColor: "#FFFFFF",
   },
   otpDigit: {
     fontSize: 22,
@@ -222,12 +235,12 @@ const styles = StyleSheet.create({
     height: 1,
     opacity: 0,
   },
-  otpResendRow: {
+  resendRow: {
     fontSize: 14,
     fontFamily: Fonts?.sans,
     color: "#374151",
   },
-  otpResendLink: {
+  resendLink: {
     fontWeight: "600",
     color: "#1F2937",
     textDecorationLine: "underline",
@@ -236,20 +249,20 @@ const styles = StyleSheet.create({
     flex: 1,
     minHeight: 40,
   },
-  verifyButton: {
+  continueButton: {
     paddingVertical: 18,
     borderRadius: 6,
     alignItems: "center",
     marginBottom: 20,
   },
-  verifyButtonDefault: {
+  continueButtonDefault: {
     backgroundColor: Brand.primaryDark,
   },
-  verifyButtonPressed: {
+  continueButtonPressed: {
     backgroundColor: Brand.primary,
     transform: [{ scale: 0.98 }],
   },
-  verifyText: {
+  continueText: {
     fontSize: 16,
     fontWeight: "700",
     fontFamily: Fonts?.sans,

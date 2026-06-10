@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   getStartedButton: {
     backgroundColor: Brand.primaryDark,
     paddingVertical: 18,
-    borderRadius: 8,
+    borderRadius: 6,
     alignItems: "center",
     width: "100%",
   },
